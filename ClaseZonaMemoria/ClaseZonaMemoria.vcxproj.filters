@@ -31,7 +31,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="main.old.cpp">
+    <Text Include="main.old.c">
       <Filter>Archivos de recursos</Filter>
     </Text>
   </ItemGroup>

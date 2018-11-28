@@ -43,7 +43,7 @@ void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {
 	}
 }
 
-void ClaseZonaMemoria::compactar() {
+void ClaseZonaMemoria::compactaZonaMemoria() {
 
 
 }
@@ -56,6 +56,6 @@ void ClaseZonaMemoria::borrar() {
 	memset(this->pComienzo, 0, this->tamano);
 }
 
-bool ClaseZonaMemoria::esFragmentada() {
+bool ClaseZonaMemoria::zonaMemoriaFragmentada() {
 	return this->fragmentada;
 }

@@ -121,7 +121,7 @@
   <ItemGroup>
     <ClCompile Include="ClaseZonaMemoria.cpp" />
     <ClCompile Include="main.cpp" />
-    <Text Include="main.old.cpp">
+    <Text Include="main.old.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </Text>
   </ItemGroup>

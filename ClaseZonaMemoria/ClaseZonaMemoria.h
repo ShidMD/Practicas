@@ -18,8 +18,8 @@ public:
 
 	bool reservaBloque(int16_t, void **);
 	void liberaBloque(int16_t *);
-	bool esFragmentada();
-	void compactar();
+	bool zonaMemoriaFragmentada();
+	void compactaZonaMemoria();
 	void borrar();
 	ClaseZonaMemoria(int16_t, unsigned char *);
 

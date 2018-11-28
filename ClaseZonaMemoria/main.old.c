@@ -1,13 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
-//strcpy insegura override
 #include "zonaMemoria.h"
-
 #include <string.h> // para strcpy
 //static uint32_t memMax = 4096;
 unsigned char bytes[4096];
 // Matriz de bytes donde se va a manejar la zona de memoria
 int main() {
-	ClaseZonaMemoria zona = new ClaseZonaMemoria(4096);
+	ZonaMemoria zona;
 	// Estructura para representar a la zona
 	uint32_t *matrizEnteros;
 	int nEnteros = 10;
@@ -19,7 +17,7 @@ int main() {
 	// Para manejar una cadena de caracteres de hasta 50 bytes
 	inicializaZonaMemoria(bytes, 4096, &zona);
 	// Inicializa la zona para manejar hasta 4096 bytes = 4 KB
-	if (!zona.reservaBloque(sizeof(uint32_t) * nEnteros, &matrizEnteros)) return -1;
+	if (!reservaBloque(sizeof(uint32_t) * nEnteros, &matrizEnteros, &zona)) return -1;
 	// Reserva en la zona un bloque para manejar una matriz de enteros.
 	// Guarda en 'matrizEnteros' su dirección
 	if (!reservaBloque(sizeof(double), &pReal, &zona)) return -1;
