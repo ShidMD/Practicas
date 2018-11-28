@@ -12,7 +12,7 @@ ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, unsigned char * bytes) :
 	pSiguienteReserva(bytes),
 	fragmentada(false)
 {
-
+	memset(bytes,0,t);
 }
 
 int16_t ClaseZonaMemoria::sizeBlock(int16_t * pBloque) {

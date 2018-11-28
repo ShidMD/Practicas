@@ -4,7 +4,6 @@
 
 class ClaseZonaMemoria {
 private:
-	//no se utiliza el puntero pComienzo debido a que existe "this" que podemos utilizar para ese fin
 	unsigned int tamano;
 	unsigned char * pComienzo;
 	unsigned char * pSiguienteReserva;
@@ -25,5 +24,4 @@ public:
 	ClaseZonaMemoria(int16_t, unsigned char *);
 
 };
-
 #endif 
