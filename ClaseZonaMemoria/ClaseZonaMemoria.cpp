@@ -16,11 +16,11 @@ ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, unsigned char * bytes) :
 }
 
 int16_t ClaseZonaMemoria::sizeBlock(int16_t * pBloque) {
-	//devuelve el tamaño en valor absoluto de un puntero a un bloque
+	//devuelve el tamaï¿½o en valor absoluto de un puntero a un bloque
 	return (*pBloque < 0 ? *pBloque * -1 : *pBloque);
 }
 
-bool ClaseZonaMemoria::isFreeBlock(int16_t * pBloque) {
+bool ClaseZonaMemoria::isFree(int16_t * pBloque) {
 	//devuelve si se puede escribir en el bloque apuntado
 	return (*(int16_t *)pBloque > 0);
 }
@@ -37,7 +37,7 @@ bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
 }
 
 void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {
-	if (!this->isFreeBlock(pValor - this->tamanoCabecera)) {
+	if (!this->isFree(pValor - this->tamanoCabecera)) {
 		*(pValor - this->tamanoCabecera) *= -1;
 		pValor = NULL;
 	}
@@ -46,6 +46,34 @@ void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {
 
 void ClaseZonaMemoria::compactaZonaMemoria() {
 
+	if (!this->fragmentada) {
+        int16_t *reader = this->pComienzo;
+        int16_t *writer = reader;
+        //Declarar punteros de recorrido
+
+        while ( *reader != 0 ) {
+        //Mientras bSize no sea 0
+        reader += tamanoCabecera + *reader;
+        //Avanzar reader a siguiente bloque
+            if ( this->isFree(reader) < 0) {
+            //Comprobar si el bloque en lectura esta liberado
+                *writer=*reader;
+                //copiar bSize
+                for (int i=0;i< *reader + this->tamanoCabecera;i++) {
+                    *(unsigned char *)(writer+i+tamanoCabecera)=*(unsigned char *)(reader+i+tamanoCabecera);
+                }
+                //escribir datos de lectura al cursor de escritura
+                *(void **)(writer + sizeof(int16_t)) = writer + tamanoCabecera;
+                //actualizar nueva posicion en el puntero de la variable
+            }
+            writer += this->tamanoCabecera + *writer;
+            //avanzar cursor writer
+        };
+        memset(writer,0,(this->pComienzo+this->tamano)-writer);
+        //limpiar memoria restante
+        this->pSiguienteReserva=writer;
+        //actualizar direcciÃ³n reserva
+    }
 
 }
 void ClaseZonaMemoria::borrar() {

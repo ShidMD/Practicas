@@ -5,12 +5,12 @@
 class ClaseZonaMemoria {
 private:
 	unsigned int tamano;
-	unsigned char * pComienzo;
-	unsigned char * pSiguienteReserva;
+	int16_t * pComienzo;
+	int16_t * pSiguienteReserva;
 	bool fragmentada;
 
 	int16_t sizeBlock(int16_t *);
-	bool isFreeBlock(int16_t *);
+	bool isFree(int16_t *);
 
 public:
 
