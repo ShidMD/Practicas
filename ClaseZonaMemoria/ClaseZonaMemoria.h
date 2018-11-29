@@ -5,19 +5,19 @@
 class ClaseZonaMemoria {
 private:
 	unsigned int tamano;
-	int16_t * pComienzo;
-	int16_t * pSiguienteReserva;
+	unsigned char * pComienzo;
+	unsigned char * pSiguienteReserva;
 	bool fragmentada;
 
-	int16_t sizeBlock(int16_t *);
-	bool isFree(int16_t *);
+	int16_t sizeBlock(unsigned char *);
+	bool isFree(unsigned char *);
 
 public:
 
 	static int8_t tamanoCabecera;
 
-	bool reservaBloque(int16_t, void **);
-	void liberaBloque(int16_t **);
+	bool reservaBloque(int16_t, unsigned char **);
+	void liberaBloque(unsigned char **);
 	bool zonaMemoriaFragmentada();
 	void compactaZonaMemoria();
 	void borrar();

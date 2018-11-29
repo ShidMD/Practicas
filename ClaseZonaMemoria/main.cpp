@@ -12,31 +12,31 @@ int main() {
 	double * pReal;
 	// Para manejar un real de 64 bits en la zona
 
-	char * mensaje;
+	unsigned char * mensaje;
 	int maxLongMensaje = 50;
 	// Para manejar una cadena de caracteres de hasta 50 bytes
 
 	ClaseZonaMemoria zona(tamMem, bytes);
 	// Inicializa la zona para manejar hasta 4096 bytes = 4 KB
 
-	if (!zona.reservaBloque((int16_t)(sizeof(uint32_t)) * nEnteros,(void **)&matrizEnteros)) return -1;
+	if (!zona.reservaBloque((int16_t)(sizeof(uint32_t)) * nEnteros,(unsigned char **)&matrizEnteros)) return -1;
 	// Reserva en la zona un bloque para manejar una matriz de enteros.
 	// Guarda en 'matrizEnteros' su dirección
 
-	if (!zona.reservaBloque(sizeof(double),(void **)&pReal)) return -1;
+	if (!zona.reservaBloque(sizeof(double),(unsigned char **)&pReal)) return -1;
 	// Reserva en la zona un bloque para manejar un real de tipo double.
 	// Guarda su dirección en 'pReal'
 
-	if (!zona.reservaBloque(maxLongMensaje,(void **)&mensaje)) return -1;
+	if (!zona.reservaBloque(maxLongMensaje,&mensaje)) return -1;
 	// Reserva en la zona un bloque para manejar una cadena de 'maxLongMensaje' bytes.
 	// Guarda su dirección en 'mensaje'
 
 	for (int i = 0; i < nEnteros; i++)
 		matrizEnteros[i] = i;
 	*pReal = 33.33;
-	strcpy(mensaje, "aaaaa");
+	strcpy((char*)mensaje, "aaaaa");
 	// Guarda información en la matriz de enteros, en el real y en la cadena
-	zona.liberaBloque((int16_t**)&pReal); // ERROR EN LECTURA DE TAMAÑO
+	zona.liberaBloque((unsigned char**)&pReal); // ERROR EN LECTURA DE TAMAÑO
 	// Libera de la zona el bloque ocupado por el real
 	if (zona.zonaMemoriaFragmentada())
 		zona.compactaZonaMemoria();

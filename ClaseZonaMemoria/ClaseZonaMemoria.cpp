@@ -8,24 +8,24 @@ int8_t ClaseZonaMemoria::tamanoCabecera = sizeof(int16_t) + sizeof(void **);
 ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, int16_t * bytes) :
 
 	tamano(t),
-	pComienzo(bytes),
-	pSiguienteReserva(bytes),
 	fragmentada(false)
 {
+	this->pComienzo = (unsigned char*)bytes;
+	this->pSiguienteReserva = this->pComienzo;
 	memset(bytes,0,t);
 }
 
-int16_t ClaseZonaMemoria::sizeBlock(int16_t * pBloque) {
+int16_t ClaseZonaMemoria::sizeBlock(unsigned char * pBloque) {
 	//devuelve el tamaño en valor absoluto de un puntero a un bloque
-	return (*pBloque < 0 ? *pBloque * -1 : *pBloque);
+	return (*(int16_t*)pBloque < 0 ? *(int16_t*)pBloque * -1 : *(int16_t*)pBloque);
 }
 
-bool ClaseZonaMemoria::isFree(int16_t * pBloque) {
+bool ClaseZonaMemoria::isFree(unsigned char * pBloque) {
 	//devuelve si se puede escribir en el bloque apuntado
-	return (*(int16_t *)pBloque >= 0);
+	return (*(int16_t *)pBloque <= 0);
 }
 
-bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
+bool ClaseZonaMemoria::reservaBloque(int16_t bSize, unsigned char ** pVar) {
 	if (bSize + this->tamanoCabecera + this->pSiguienteReserva > this->pComienzo + this->tamano) return false;
 	//Si el bloque no cabe en la memoria, return false.
 	else {
@@ -41,39 +41,39 @@ bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
 	}
 }
 
-void ClaseZonaMemoria::liberaBloque(int16_t ** pValor) {//------------REVISAR ERROR EN LECTURA DE TAMAÑO---------------//
-	if (!this->isFree(*pValor - this->tamanoCabecera)) {
+void ClaseZonaMemoria::liberaBloque(unsigned char ** pValor) {
+	if (!(this->isFree(*pValor - this->tamanoCabecera))) {
 		//Si el bloque no está liberado ya, cambiar su valor a negativo
-		*(*pValor - this->tamanoCabecera) *= -1;
+		*(int16_t*)(*pValor - this->tamanoCabecera) *= -1;
 		*pValor = NULL;
 		//Se pone el puntero a nulo
 		this->fragmentada = true;
 	}
 }
 
-void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------REVISAR PROCEDIMIENTO----------------------//
+void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------OPTIMIZAR PROCEDIMIENTO----------------------//
 
 	if (!this->fragmentada) {
-        int16_t *reader = this->pComienzo;
-        int16_t *writer = reader;
+        unsigned char *reader = this->pComienzo;
+        unsigned char *writer = reader;
         //Declarar punteros de recorrido
 
-        while ( *reader != 0 ) {
+        while ( *(int16_t*)reader != 0 ) {
         //Mientras bSize no sea 0
         reader += tamanoCabecera + *reader;
         //Avanzar reader a siguiente bloque
             if (this->isFree(reader)) {
             //Comprobar si el bloque en lectura esta liberado
-                *writer=*reader;
+                *(int16_t*)writer=*(int16_t*)reader;
                 //copiar bSize
                 for (int i=0;i< this->sizeBlock(reader) + this->tamanoCabecera;i++) {
-                    *(unsigned char *)(writer+i+tamanoCabecera)=*(unsigned char *)(reader+i+tamanoCabecera);
+                    *(writer+i+tamanoCabecera)=*(reader+i+tamanoCabecera);
                 }
                 //escribir datos de lectura al cursor de escritura
-                *(void **)(writer + sizeof(int16_t)) = writer + tamanoCabecera;
+                *(unsigned char **)(writer + sizeof(int16_t)) = writer + tamanoCabecera;
                 //actualizar nueva posicion en el puntero de la variable
             }
-            writer += this->tamanoCabecera + *writer;
+            writer += this->tamanoCabecera + *(int16_t*)writer;
             //avanzar cursor writer
         };
         memset(writer,0,(this->pComienzo+this->tamano)-writer);
@@ -88,7 +88,7 @@ void ClaseZonaMemoria::borrar() {
 	//variable de incremento
 	while (this->pComienzo + i < this->pComienzo + this->tamano && *(int16_t*)(this->pComienzo + i)) {
 		//mientras no se salga de memoria y el tamaño de bloque no sea 0
-		*(unsigned *)(*(unsigned **)(this->pComienzo + i + sizeof(int16_t))) = NULL;
+		*(unsigned char *)(*(unsigned char **)(this->pComienzo + i + sizeof(int16_t))) = NULL;
 		//Poner la variable apuntada en memoria a NULL
 		i += *(int16_t *)(this->pComienzo + i) + this->tamanoCabecera;
 		//incrementar dirección hasta siguiente bloque
