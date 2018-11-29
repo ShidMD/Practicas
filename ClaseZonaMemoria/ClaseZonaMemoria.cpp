@@ -41,6 +41,7 @@ void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {
 		*(pValor - this->tamanoCabecera) *= -1;
 		pValor = NULL;
 	}
+	this->fragmentada = true;
 }
 
 void ClaseZonaMemoria::compactaZonaMemoria() {
