@@ -5,7 +5,7 @@
 
 int8_t ClaseZonaMemoria::tamanoCabecera = sizeof(int16_t) + sizeof(void **);
 
-ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, unsigned char * bytes) :
+ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, int16_t * bytes) :
 
 	tamano(t),
 	pComienzo(bytes),
@@ -55,7 +55,7 @@ void ClaseZonaMemoria::compactaZonaMemoria() {
         //Mientras bSize no sea 0
         reader += tamanoCabecera + *reader;
         //Avanzar reader a siguiente bloque
-            if ( this->isFree(reader) < 0) {
+            if (this->isFree(reader)) {
             //Comprobar si el bloque en lectura esta liberado
                 *writer=*reader;
                 //copiar bSize

@@ -2,7 +2,7 @@
 #include "ClaseZonaMemoria.h"
 #include <string.h> // para strcpy
 const unsigned int tamMem = 4096;
-unsigned char bytes[tamMem];
+int16_t bytes[tamMem];
 
 int main() {
 	uint32_t * matrizEnteros;
@@ -19,7 +19,7 @@ int main() {
 	ClaseZonaMemoria zona(tamMem, bytes);
 	// Inicializa la zona para manejar hasta 4096 bytes = 4 KB
 
-	if (!zona.reservaBloque(sizeof(uint32_t) * nEnteros,(void **)&matrizEnteros)) return -1;
+	if (!zona.reservaBloque((int16_t)(sizeof(uint32_t)) * nEnteros,(void **)&matrizEnteros)) return -1;
 	// Reserva en la zona un bloque para manejar una matriz de enteros.
 	// Guarda en 'matrizEnteros' su dirección
 

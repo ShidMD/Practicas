@@ -21,7 +21,7 @@ public:
 	bool zonaMemoriaFragmentada();
 	void compactaZonaMemoria();
 	void borrar();
-	ClaseZonaMemoria(int16_t, unsigned char *);
+	ClaseZonaMemoria(int16_t, int16_t*);
 
 };
 #endif 
