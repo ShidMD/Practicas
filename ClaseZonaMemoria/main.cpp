@@ -21,25 +21,25 @@ int main() {
 
 	if (!zona.reservaBloque(sizeof(uint32_t) * nEnteros,(void **)&matrizEnteros)) return -1;
 	// Reserva en la zona un bloque para manejar una matriz de enteros.
-	// Guarda en 'matrizEnteros' su dirección
+	// Guarda en 'matrizEnteros' su direcciÃ³n
 
 	if (!zona.reservaBloque(sizeof(double),(void **)&pReal)) return -1;
 	// Reserva en la zona un bloque para manejar un real de tipo double.
-	// Guarda su dirección en 'pReal'
+	// Guarda su direcciÃ³n en 'pReal'
 
 	if (!zona.reservaBloque(maxLongMensaje,(void **)&mensaje)) return -1;
 	// Reserva en la zona un bloque para manejar una cadena de 'maxLongMensaje' bytes.
-	// Guarda su dirección en 'mensaje'
+	// Guarda su direcciÃ³n en 'mensaje'
 
 	for (int i = 0; i < nEnteros; i++)
 		matrizEnteros[i] = i;
 	*pReal = 33.33;
 	strcpy(mensaje, "aaaaa");
-	// Guarda información en la matriz de enteros, en el real y en la cadena
+	// Guarda informaciÃ³n en la matriz de enteros, en el real y en la cadena
 	zona.liberaBloque((int16_t*)pReal);
 	// Libera de la zona el bloque ocupado por el real
 	if (zona.zonaMemoriaFragmentada())
 		zona.compactaZonaMemoria();
-	// Si la zona está fragmentada, la compacta
+	// Si la zona estÃ¡ fragmentada, la compacta
 	return 0;
 }

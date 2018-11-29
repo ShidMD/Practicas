@@ -16,7 +16,7 @@ ClaseZonaMemoria::ClaseZonaMemoria(int16_t t, unsigned char * bytes) :
 }
 
 int16_t ClaseZonaMemoria::sizeBlock(int16_t * pBloque) {
-	//devuelve el tama�o en valor absoluto de un puntero a un bloque
+	//devuelve el tamaño en valor absoluto de un puntero a un bloque
 	return (*pBloque < 0 ? *pBloque * -1 : *pBloque);
 }
 
