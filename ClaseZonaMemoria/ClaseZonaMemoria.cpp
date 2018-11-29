@@ -41,11 +41,11 @@ bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
 	}
 }
 
-void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {//------------REVISAR SI CONVIENE PASAR POR REFERENCIA---------------//
-	if (!this->isFree(pValor - this->tamanoCabecera)) {
+void ClaseZonaMemoria::liberaBloque(int16_t ** pValor) {//------------REVISAR ERROR EN LECTURA DE TAMAÑO---------------//
+	if (!this->isFree(*pValor - this->tamanoCabecera)) {
 		//Si el bloque no está liberado ya, cambiar su valor a negativo
-		*(pValor - this->tamanoCabecera) *= -1;
-		pValor = NULL;
+		*(*pValor - this->tamanoCabecera) *= -1;
+		*pValor = NULL;
 		//Se pone el puntero a nulo
 		this->fragmentada = true;
 	}
@@ -95,6 +95,9 @@ void ClaseZonaMemoria::borrar() {
 	}
 	memset(this->pComienzo, 0, this->tamano);
 	//Limpiar memoria con 0
+	this->pSiguienteReserva = this->pComienzo;
+	this->fragmentada = false;
+	//Restaurar parámetros
 }
 
 bool ClaseZonaMemoria::zonaMemoriaFragmentada() {

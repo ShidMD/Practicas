@@ -36,10 +36,11 @@ int main() {
 	*pReal = 33.33;
 	strcpy(mensaje, "aaaaa");
 	// Guarda información en la matriz de enteros, en el real y en la cadena
-	zona.liberaBloque((int16_t*)pReal);
+	zona.liberaBloque((int16_t**)&pReal); // ERROR EN LECTURA DE TAMAÑO
 	// Libera de la zona el bloque ocupado por el real
 	if (zona.zonaMemoriaFragmentada())
 		zona.compactaZonaMemoria();
 	// Si la zona está fragmentada, la compacta
+	zona.borrar();
 	return 0;
 }

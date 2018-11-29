@@ -17,7 +17,7 @@ public:
 	static int8_t tamanoCabecera;
 
 	bool reservaBloque(int16_t, void **);
-	void liberaBloque(int16_t *);
+	void liberaBloque(int16_t **);
 	bool zonaMemoriaFragmentada();
 	void compactaZonaMemoria();
 	void borrar();
