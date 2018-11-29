@@ -27,24 +27,31 @@ bool ClaseZonaMemoria::isFree(int16_t * pBloque) {
 
 bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
 	if (bSize + this->tamanoCabecera + this->pSiguienteReserva > this->pComienzo + this->tamano) return false;
+	//Si el bloque no cabe en la memoria, return false.
 	else {
-		*(int16_t *)this->pSiguienteReserva = bSize;
+		*this->pSiguienteReserva = bSize;
+		//escribe el tamaño
 		*(void **)(this->pSiguienteReserva + sizeof(int16_t)) = pVar;
+		//guarda la dirección de la variable facilitada en memoria
 		*pVar = this->pSiguienteReserva + this->tamanoCabecera;
+		//Apunta el puntero de pVar a la dirección de la variable en memoria
 		this->pSiguienteReserva += bSize + this->tamanoCabecera;
-		return 1;
+		//Desplaza pSiguienteReserva al final del bloque
+		return true;
 	}
 }
 
-void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {
+void ClaseZonaMemoria::liberaBloque(int16_t * pValor) {//------------REVISAR SI CONVIENE PASAR POR REFERENCIA---------------//
 	if (!this->isFree(pValor - this->tamanoCabecera)) {
+		//Si el bloque no está liberado ya, cambiar su valor a negativo
 		*(pValor - this->tamanoCabecera) *= -1;
 		pValor = NULL;
+		//Se pone el puntero a nulo
+		this->fragmentada = true;
 	}
-	this->fragmentada = true;
 }
 
-void ClaseZonaMemoria::compactaZonaMemoria() {
+void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------REVISAR PROCEDIMIENTO----------------------//
 
 	if (!this->fragmentada) {
         int16_t *reader = this->pComienzo;
@@ -59,7 +66,7 @@ void ClaseZonaMemoria::compactaZonaMemoria() {
             //Comprobar si el bloque en lectura esta liberado
                 *writer=*reader;
                 //copiar bSize
-                for (int i=0;i< *reader + this->tamanoCabecera;i++) {
+                for (int i=0;i< this->sizeBlock(reader) + this->tamanoCabecera;i++) {
                     *(unsigned char *)(writer+i+tamanoCabecera)=*(unsigned char *)(reader+i+tamanoCabecera);
                 }
                 //escribir datos de lectura al cursor de escritura
@@ -78,11 +85,16 @@ void ClaseZonaMemoria::compactaZonaMemoria() {
 }
 void ClaseZonaMemoria::borrar() {
 	unsigned int i = 0;
+	//variable de incremento
 	while (this->pComienzo + i < this->pComienzo + this->tamano && *(int16_t*)(this->pComienzo + i)) {
+		//mientras no se salga de memoria y el tamaño de bloque no sea 0
 		*(unsigned *)(*(unsigned **)(this->pComienzo + i + sizeof(int16_t))) = NULL;
+		//Poner la variable apuntada en memoria a NULL
 		i += *(int16_t *)(this->pComienzo + i) + this->tamanoCabecera;
+		//incrementar dirección hasta siguiente bloque
 	}
 	memset(this->pComienzo, 0, this->tamano);
+	//Limpiar memoria con 0
 }
 
 bool ClaseZonaMemoria::zonaMemoriaFragmentada() {
