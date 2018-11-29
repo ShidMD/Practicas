@@ -22,7 +22,7 @@ int16_t ClaseZonaMemoria::sizeBlock(int16_t * pBloque) {
 
 bool ClaseZonaMemoria::isFree(int16_t * pBloque) {
 	//devuelve si se puede escribir en el bloque apuntado
-	return (*(int16_t *)pBloque > 0);
+	return (*(int16_t *)pBloque >= 0);
 }
 
 bool ClaseZonaMemoria::reservaBloque(int16_t bSize, void ** pVar) {
