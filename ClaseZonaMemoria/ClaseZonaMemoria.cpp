@@ -52,36 +52,28 @@ void ClaseZonaMemoria::liberaBloque(unsigned char ** pValor) {
 }
 
 void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------OPTIMIZAR PROCEDIMIENTO----------------------//
+	if (this->fragmentada) {
+		unsigned char *reader, *writer;
+		writer = this->pComienzo;
+		reader = this->pComienzo;
+		//declarar punteros de recorrido
+		while (*(int16_t*)writer >0 ) {
+			writer += this->tamanoCabecera + this->sizeBlock(writer);
+		}
+		//avanza el puntero buscando una zona libre para escribir
+		reader = writer;
+		while(reader!=0 && reader < this->pComienzo + this->tamano){
+			while (*(int16_t*)reader < 0 && reader < this->pComienzo + this->tamano) {
+			reader += this->tamanoCabecera + this->sizeBlock(reader);
+			}
+			if (*(int16_t*)reader == 0 || reader >= this->pComienzo + this->tamano)break;
+			memcpy(writer, reader,(int16_t)(this->tamanoCabecera+ this->sizeBlock(reader)));
+			writer += this->tamanoCabecera + this->sizeBlock(writer);
+			reader += this->tamanoCabecera + this->sizeBlock(writer);
 
-	if (!this->fragmentada) {
-        unsigned char *reader = this->pComienzo;
-        unsigned char *writer = reader;
-        //Declarar punteros de recorrido
-
-        while ( *(int16_t*)reader != 0 ) {
-        //Mientras bSize no sea 0
-        reader += tamanoCabecera + *reader;
-        //Avanzar reader a siguiente bloque
-            if (this->isFree(reader)) {
-            //Comprobar si el bloque en lectura esta liberado
-                *(int16_t*)writer=*(int16_t*)reader;
-                //copiar bSize
-                for (int i=0;i< this->sizeBlock(reader) + this->tamanoCabecera;i++) {
-                    *(writer+i+tamanoCabecera)=*(reader+i+tamanoCabecera);
-                }
-                //escribir datos de lectura al cursor de escritura
-                *(unsigned char **)(writer + sizeof(int16_t)) = writer + tamanoCabecera;
-                //actualizar nueva posicion en el puntero de la variable
-            }
-            writer += this->tamanoCabecera + *(int16_t*)writer;
-            //avanzar cursor writer
-        };
-        memset(writer,0,(this->pComienzo+this->tamano)-writer);
-        //limpiar memoria restante
-        this->pSiguienteReserva=writer;
-        //actualizar dirección reserva
-    }
-
+		}
+		this->fragmentada = false;
+	}
 }
 void ClaseZonaMemoria::borrar() {
 	unsigned int i = 0;
