@@ -51,7 +51,7 @@ void ClaseZonaMemoria::liberaBloque(unsigned char ** pValor) {
 	}
 }
 
-void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------OPTIMIZAR PROCEDIMIENTO----------------------//
+void ClaseZonaMemoria::compactaZonaMemoria() {
 	if (this->fragmentada) {
 		unsigned char *reader, *writer;
 		writer = this->pComienzo;
@@ -72,7 +72,12 @@ void ClaseZonaMemoria::compactaZonaMemoria() { //-------------------OPTIMIZAR PR
 			reader += this->tamanoCabecera + this->sizeBlock(writer);
 
 		}
+		memset(writer, 0, (this->pComienzo + this->tamano) - writer);
+		//Limpia el resto de memoria
+		this->pSiguienteReserva = writer;
+		//Actualiza posición de escritura
 		this->fragmentada = false;
+		//Actualiza estado de memoria
 	}
 }
 void ClaseZonaMemoria::borrar() {
