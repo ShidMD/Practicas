@@ -3,7 +3,7 @@
 #include <stdint.h>
 // Para uint16_t
 typedef struct {
-uint8_t tamano; // Tamaño de la zona de memoria en bytes
+uint16_t tamano; // Tamaño de la zona de memoria en bytes
 uint8_t * pComienzo; // Dirección de comienzo de la zona
 uint8_t * pSiguienteReserva; // Dirección donde se va a hacer la siguiente reserva
 uint8_t fragmentada;

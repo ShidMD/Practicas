@@ -26,7 +26,7 @@ int reservaBloque(int16_t nBytes, void ** pp, ZonaMemoria * pZona) {
         // Si cabe ...
         *(int16_t *)(pZona->pSiguienteReserva) = nBytes;
         // En esa dirección se guarda el número de bytes como un entero de 2 bytes
-        *(int16_t **)(pZona->pSiguienteReserva + sizeof(int16_t)) = pp;
+        *(void **)(pZona->pSiguienteReserva + sizeof(int16_t)) = pp;
         // A continuación se guarda la dirección del puntero de datos
         *pp = pZona->pSiguienteReserva + tamanoCabecera;
         // Se devuelve en el puntero de datos la dirección de los datos
@@ -58,7 +58,7 @@ int zonaMemoriaFragmentada(ZonaMemoria * pZona) {
 
 int sizeAbs (int16_t* a) {
 	//Obtiene el valor absoluto de nBytes
-	if (*a < 0) return *a *= -1;
+	if (*a < 0) return *a * -1;
 	return *a;
 }
 
@@ -72,12 +72,12 @@ void compactaZonaMemoria(ZonaMemoria * pZona) {
 		uint8_t *reader;
         //Declarar punteros de recorrido (como punteros a int16_t para simplificar las llamadas a bSize)
 
-		while ((*(int16_t)writer > 0)&&(writer < pZona->pComienzo + pZona->tamano)) writer += tamanoCabecera + sizeAbs(writer);
+		while ((*(int16_t *)writer > 0)&&(writer < pZona->pComienzo + pZona->tamano)) writer += tamanoCabecera + sizeAbs(writer);
 		//Busca el primer bloque disponible para empezar a copiar
 		reader = writer;
 		//Coloca el puntero de lectura
 
-        while ( (*(int16_t*)reader != 0)||(reader < pZona->pComienzo+pZona->tamano)) {
+        while ( (*(int16_t*)reader != 0)&&(reader < pZona->pComienzo+pZona->tamano)) {
         //Copia bloques hasta que el puntero de lectura llegue al final o a un bloque tamaño 0
 
 			while (*(int16_t*)reader < 0) reader += tamanoCabecera + sizeAbs(reader); 
